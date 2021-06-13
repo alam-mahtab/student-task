@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+Dasboard page
+</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script> 
+<link href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css" rel="stylesheet">
+<style>
+  .dataTables_filter, .dataTables_length, .dataTables_paginate, .dataTables_info{
+    display: none;
+  }
+  table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+  }
+  
+  tr:nth-child(even) {
+    background-color: #dddddd;
+  }
+  </style>
+</head>
+<body>
+<h1 style="font-family:Comic Sans Ms;text-align:center;font-size:20pt;
+color:#00FF00;">
+Dashboard
+</h1>
+<table id="myTable" class="display nowrap">
+  <thead>
+    <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone No</th>
+        <th>Class</th>
+        <th>Marks In %</th>
+    </tr>
+</thead>
+<tbody id="list-list"></tbody>
+</table>  
+<br>
+<button type="" class="" onclick="addStudent()">Add Student</button>
+<div id="addNewStudentForm" style="display: none;">
+<form action="javascript:void(0);" method="POST" onsubmit="addNewStudentDetails()"> 
+  <input type="text" id="name" placeholder="Name">
+  <input type="text" id="father_name" placeholder="Father Name">
+  <input type="text" id="dob" placeholder="Date Of Birth">
+  <input type="text" id="address" placeholder="Address">
+  <input type="text" id="city" placeholder="City">
+  <input type="text" id="state" placeholder="State">
+  <input type="text" id="pin" placeholder="Pin">
+  <input type="text" id="phone_no" placeholder="Phone">
+  <input type="email" id="email" placeholder="Email">
+  <input type="text" id="class_opted" placeholder="Class">
+  <input type="text" id="marks" placeholder="Marks">
+  <input type="text" id="date_enrolled" placeholder="Date Enrolled">
+  
+  
+  
+ 
+  <div>
+    <input type="submit" value="Add">
+  </div>
+ 
+ </form>
+</div>
+<div class="modal fade" id="DescModal" role="dialog">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+               <h3 class="modal-title" >Student Details</h3>
+
+          </div>
+          <div class="modal-body" id="modBody">
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-primary"  data-dismiss="modal" aria-hidden="true">Close</button>
+          </div>
+      </div>
+      <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
+<script>
+
+  function addStudent() {
+   let studentForm =  document.getElementById('addNewStudentForm');
+   studentForm.style.display = 'block';
+  }
+
+function addNewStudentDetails() {
+var name = document.getElementById("name").value;
+var father_name = document.getElementById("father_name").value;
+var dob = document.getElementById("dob").value;
+var address = document.getElementById("address").value;
+var city = document.getElementById("city").value;
+var state = document.getElementById("state").value;
+var pin = document.getElementById("pin").value;
+var phone_no = document.getElementById("phone_no").value;
+var email = document.getElementById("email").value;
+var class_opted = document.getElementById("class_opted").value;
+var marks = document.getElementById("marks").value;
+var date_enrolled = document.getElementById("date_enrolled").value;
+if( name ==='' || email ===''){
+alert("Please fill all fields...!!!!!!");
+return false;
+}else{
+  var formData = {
+    name: name,
+    father_name: father_name,
+    dob: dob,
+    address: address,
+    city: city,
+    state: state,
+    pin: pin,
+    phone_no: phone_no,
+    email: email,
+    class_opted: class_opted,
+    marks: marks,
+    date_enrolled: date_enrolled
+  }
+  this.postStudentData(formData);
+return true;
+}
+}
+function postStudentData(formData) {
+fetch("http://127.0.0.1:8080/api/management", {
+      
+      // Adding method type
+      method: "POST",
+        
+      // Adding body or contents to send
+      body: JSON.stringify({
+        name: formData.name,
+        father_name: formData.father_name,
+        dob: formData.dob,
+        address: formData.address,
+        city: formData.city,
+        state: formData.state,
+        pin: formData.pin,
+        phone_no: formData.phone_no,
+        email: formData.email,
+        class_opted: formData.class_opted,
+        marks: formData.marks,
+        date_enrolled: formData.date_enrolled
+      }),
+        
+      // Adding headers to the request
+      headers: {
+          "Content-type": "application/json; charset=UTF-8"
+      }
+  }).then(response => response.json())
+  .then(data => { if(data) {
+    console.log('data:' , data);
+    let studentForm =  document.getElementById('addNewStudentForm');
+   studentForm.style.display = 'none';
+   window.location.reload();
+    this.getStudentTable(data);
+
+  }})
+    .catch((err) => alert(err));
+}
+
+  $(document).ready(function(){
+	 $("#myTable").DataTable({
+      ordering: false
+     });
+	 });
+
+  window.onload = function() {
+    getStudentList();
+};
+var popupData = [];
+    function getStudentList() {
+
+  fetch("http://127.0.0.1:8080/api/management", {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+                'Content-Type': 'application/json',
+                "Accept": 'application/json',
+            }
+  })
+  .then(response => response.json())
+  .then(data => { if(data) {
+    this.popupData = data;
+    this.getStudentTable(data);
+
+  }})
+    .catch((err) => console.log(err));
+      }
+
+        function   getStudentTable(data) {
+                    var html = '';
+                    $.each(data, function (i, data) {
+                        html += `<tr>
+                                        <td> ` + data.name + `</td>
+                                        <td>` + data.email + `</td>
+                                        <td>` + data.phone_no + `</td>
+                                        <td>` + data.class_opted + `</td>
+                                        <td> ` + data.marks + ` </td>
+                                    </tr>`;
+                               
+
+                        //This is selector of my <tbody> in my table
+                        $("#list-list").html(html);
+                       
+                    });
+               
+                    $('#myTable').on('click', 'tr', function () {
+          var row_index = $(this).closest("tr").index();
+         var para = '';
+         para +=`<p> <b>Name:</b> ${data[row_index].name}</p>
+                 <p> <b>Email:</b> ${data[row_index].email}</p>
+                 <p> <b>Father Name:</b> ${data[row_index].father_name}</p>
+                 <p> <b>Phone No:</b> ${data[row_index].phone_no}</p>
+                 <p> <b>Class:</b> ${data[row_index].class_opted}</p>
+                 <p> <b>Marks In %:</b> ${data[row_index].marks}</p>                 
+                 <p> <b>DOB:</b> ${data[row_index].dob}</p>
+                 <p> <b>DOE:</b> ${data[row_index].date_enrolled}</p>`
+
+        $("#modBody").html(para);;
+        $('#DescModal').modal("show");
+    });
+  }
+</script>
+</body>
+</html>
